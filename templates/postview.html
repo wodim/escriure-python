@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for post in posts %}{{ post.greeting }}
+        <div class="article">
+            <div class="meta">
+                <a class="date" href="{{ post.custom.permalink }}" title="Publicado por {{ post.nick }} — {{ post.custom.date_full }}">
+                    {{ post.custom.date }}
+                </a>
+            </div>
+            <div class="content">
+                <a class="title" href="{{ post.custom.permalink }}">{{ post.title }}</a>
+                <div class="arrow"></div>
+                <div class="text">
+                    {{ post.text_html|safe }}
+                </div>
+            </div>
+            <div class="clearit"></div>
+        </div>
+    {% endfor %}
+{% endblock %}

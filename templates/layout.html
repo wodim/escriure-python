@@ -1,0 +1,59 @@
+{% import "utils.html" as utils %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+{% if g.session.title is defined %}
+		<title>{{ g.session.title }} — {{ g.config.title }}</title>
+{% else %}
+		<title>{{ g.config.title }}</title>
+{% endif %}
+{% if g.session is defined %}
+    {% if g.session.tags is defined %}
+            <meta name="keywords" content="{{ g.session.tags }}" />
+    {% endif %}
+    {% if g.session.canonical is defined %}
+            <link rel="canonical" href="{{ g.session.canonical }}" />
+    {% endif %}
+{% endif %}
+        <link rel="stylesheet" type="text/css" media="all" href="/static/stylesheet.css" />
+		<link rel="shortcut icon" href="/static/favicon.png" type="image/x-png" />
+		<link rel="alternate" type="application/rss+xml" title="{{ g.config.title }}" href="{{ g.config.url }}/rss" />
+{% if g.config.analytics is defined %}
+		<script>
+
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', '{{ g.config.analytics }}']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+
+        </script>
+{% endif %}
+		<script>
+			window.onload=function(){var a=document.getElementsByTagName('img');for(var i=0;i<a.length;i++){var b=a[i];if(a[i].width<a[i].naturalWidth){var c=document.createElement('a');c.href=b.src;c.target='_blank';b.parentNode.insertBefore(c,null);c.insertBefore(b,null)}}}
+		</script>
+	</head>
+	<body>
+		<div class="header">
+			<a href="{{ g.config.url }}/">{{ g.config.title }}</a>
+		</div>
+		<div class="section">
+			<div class="articles">
+                {% block content %}{% endblock %}
+                {% if pagination %}
+                    {{ utils.render_pagination(pagination, 'PageView:get') }}
+                {% endif %}
+            </div>
+			<div class="clear"></div>
+			<div class="footer">
+				<a href="{{ g.config.url }}/rss">RSS</a> — <a href="{{ g.config.url }}/archive">Post archive</a>
+			</div>
+		</div>
+	</body>
+</html>
+<!-- __TIME__ -->

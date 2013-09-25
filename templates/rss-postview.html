@@ -1,0 +1,14 @@
+{% extends "rss-layout.html" %}
+{% block content %}
+    {% for post in posts %}
+        <item>
+            <title>{{ post.title }}</title>
+            <link>{{ post.custom.permalink }}</link>
+            <pubDate>{{ post.custom.date_rss }}</pubDate>
+            <dc:creator>{{ post.nick }}</dc:creator>
+            <guid>{{ post.custom.permalink }}</guid>
+
+            <description>{{ post.text_html|e }}</description>
+        </item>
+    {% endfor %}
+{% endblock %}

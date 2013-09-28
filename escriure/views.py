@@ -1,7 +1,8 @@
-from flask import abort, render_template, g, request, redirect, url_for
+from flask import abort, render_template, g, request, redirect, url_for, Response
 from flask.ext.classy import FlaskView, route
 
-from models import PostModel
+from .models import *
+from .config import _cfg
 
 class PostView(FlaskView):
     route_base = '/'
@@ -74,6 +75,21 @@ class RestView(FlaskView):
     @route('/favicon.ico', endpoint='FaviconView')
     def get(self):
         if request.endpoint == 'RobotsView':
-            return "Sitemap: http://blog.vortigaunt.net/sitemap.xml"
+            robots = 'Sitemap: %s/sitemap.xml' % _cfg('url')
+            response = Response(response=robots, mimetype='text/plain')
+            return response
         elif request.endpoint == 'FaviconView':
             return redirect(url_for('static', filename='favicon.png'))
+
+class BlobView(FlaskView):
+    route_base = '/'
+    
+    @route('/blob/<name>')
+    def get(self, name):
+        blob = BlobModel.query.filter(BlobModel.name == name).limit(1).first()
+        
+        if blob == None:
+            abort(404)
+        
+        response = Response(response=blob.content, mimetype=blob.mimetype)
+        return response

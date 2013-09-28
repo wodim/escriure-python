@@ -30,15 +30,6 @@ class PostModel(db.Model):
     def __repr__(self):
         return '<Post %r, permaid %r>' % (self.id, self.permaid)
 
-"""
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
-  `mimetype` varchar(32) NOT NULL,
-  `timestamp` int(11) NOT NULL,
-  `size` int(11) NOT NULL,
-  `content` blob NOT NULL,
-"""
-        
 class BlobModel(db.Model):
     __tablename__ = 'blobs'
 
@@ -47,7 +38,7 @@ class BlobModel(db.Model):
     mimetype = db.Column(db.String(32))
     timestamp = db.Column(db.Integer)
     size = db.Column(db.Integer)
-    content = db.BLOB(db.Integer)
+    content = db.Column(db.BLOB)
 
     def __repr__(self):
-        return '<Blob %r, name %r, size %r>' % (self.id, self.name, self.size)
+        return '<Blob %r, name %r, size %r, mimetype %s>' % (self.id, self.name, self.size, self.mimetype)

@@ -16,7 +16,7 @@ class PostView(FlaskView):
             abort(404)
             
         if request.endpoint == 'PostView:get_deprecated':
-            return redirect(url_for('PostView:get', permaid=permaid))
+            return redirect(g.config['url'] + url_for('PostView:get', permaid=permaid))
         
         g.session['canonical'] = post.custom['permalink']
         g.session['tags'] = post.tags
@@ -86,7 +86,7 @@ class BlobView(FlaskView):
     
     @route('/blob/<name>')
     def get(self, name):
-        blob = BlobModel.query.filter(BlobModel.name == name).limit(1).first()
+        blob = BlobModel.query.filter(BlobModel.name == name).first()
         
         if blob == None:
             abort(404)

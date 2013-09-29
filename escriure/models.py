@@ -3,6 +3,8 @@ from flask import g, url_for
 
 import time
 
+# -- POST MODEL --
+
 class PostModel(db.Model):
     __tablename__ = 'posts'
 
@@ -16,6 +18,8 @@ class PostModel(db.Model):
     text_type = db.Column(db.Enum(['html', 'markdown']))
     tags = db.Column(db.String(128))
     status = db.Column(db.Enum(['draft', 'published']))
+    comment_count = db.Column(db.Integer)
+    comment_status = db.Column(db.Text)
 
     @property
     def custom(self):
@@ -29,6 +33,17 @@ class PostModel(db.Model):
 
     def __repr__(self):
         return '<Post %r, permaid %r>' % (self.id, self.permaid)
+
+def markdown_convert(target, context):
+    if target.text_type == 'markdown':
+        # convertir
+        # target.text_type = 'html'
+        pass
+    db.session.commit()
+
+db.event.listen(PostModel, 'load', markdown_convert)
+
+# -- BLOB MODEL --
 
 class BlobModel(db.Model):
     __tablename__ = 'blobs'

@@ -8,20 +8,17 @@
 {% else %}
         <title>{{ g.config.title }}</title>
 {% endif %}
-{% if g.session is defined %}
-    {% if g.session.tags is defined %}
-            <meta name="keywords" content="{{ g.session.tags }}" />
-    {% endif %}
-    {% if g.session.canonical is defined %}
-            <link rel="canonical" href="{{ g.session.canonical }}" />
-    {% endif %}
+{% if g.session.tags is defined %}
+        <meta name="keywords" content="{{ g.session.tags }}" />
 {% endif %}
-        <link rel="stylesheet" type="text/css" media="all" href="/static/stylesheet.css" />
-        <link rel="shortcut icon" href="/static/favicon.png" type="image/x-png" />
+{% if g.session.canonical is defined %}
+        <link rel="canonical" href="{{ g.session.canonical }}" />
+{% endif %}
+        <link rel="stylesheet" type="text/css" media="all" href="{{ url_for('static', filename='stylesheet.css') }}" />
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/x-png" />
         <link rel="alternate" type="application/rss+xml" title="{{ g.config.title }}" href="{{ g.config.url }}/rss" />
 {% if g.config.analytics is defined %}
         <script>
-
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', '{{ g.config.analytics }}']);
             _gaq.push(['_trackPageview']);
@@ -31,7 +28,6 @@
             ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
-
         </script>
 {% endif %}
         <script>
@@ -51,7 +47,7 @@
             </div>
             <div class="clear"></div>
             <div class="footer">
-                <a href="{{ g.config.url }}/rss">RSS</a> — <a href="{{ g.config.url }}/archive">Post archive</a>
+                <a href="{{ g.config.url }}/rss">RSS</a> — <a href="{{ g.config.url }}/archive">Lista de entradas</a>
             </div>
         </div>
     </body>

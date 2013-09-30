@@ -1,5 +1,6 @@
 from database import db
 from flask import g, url_for
+from markdown import markdown
 
 import time
 
@@ -36,10 +37,9 @@ class PostModel(db.Model):
 
 def markdown_convert(target, context):
     if target.text_type == 'markdown':
-        # convertir
-        # target.text_type = 'html'
-        pass
-    db.session.commit()
+        target.text_html = markdown(target.text_markdown)
+        target.text_type = 'html'
+        db.session.commit()
 
 db.event.listen(PostModel, 'load', markdown_convert)
 

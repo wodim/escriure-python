@@ -1,8 +1,10 @@
+import time
+from collections import OrderedDict
+
 from flask import abort, render_template, g, request, redirect, url_for, Response
 from flask.ext.classy import FlaskView, route
 
 from .models import *
-from .config import _cfg
 
 class PostView(FlaskView):
     route_base = '/'
@@ -47,9 +49,13 @@ class PageView(FlaskView):
 class RSSView(FlaskView):
     route_base = '/'
     
-    @route('/rss')
+    @route('/rss', endpoint='RSSView')
+    @route('/rss/twitter', endpoint='RSSTwitterView')
     def get(self):
-        posts = PostModel.query.filter(PostModel.status == 'published').order_by('id desc').limit(int(g.config['page_size']) * 4)
+        if request.endpoint == 'RSSView':
+            posts = PostModel.query.filter(PostModel.status == 'published').order_by('id desc').limit(int(g.config['page_size']) * 4)
+        elif request.endpoint == 'RSSTwitterView':
+            posts = PostModel.query.filter(PostModel.status == 'published', PostModel.twitter == 1).order_by('id desc').limit(int(g.config['page_size']) * 4)
         
         if posts == None:
             abort(404)
@@ -75,7 +81,7 @@ class RestView(FlaskView):
     @route('/favicon.ico', endpoint='FaviconView')
     def get(self):
         if request.endpoint == 'RobotsView':
-            robots = 'Sitemap: %s/sitemap.xml' % _cfg('url')
+            robots = 'Sitemap: %s/sitemap.xml' % g.config['url']
             response = Response(response=robots, mimetype='text/plain')
             return response
         elif request.endpoint == 'FaviconView':
@@ -93,3 +99,26 @@ class BlobView(FlaskView):
         
         response = Response(response=blob.content, mimetype=blob.mimetype)
         return response
+
+class ArchiveView(FlaskView):
+    route_base = '/'
+
+    @route('/archive')
+    def get(self):
+        posts = PostModel.query.filter(PostModel.status == 'published').order_by('id desc')
+
+        if posts == None:
+            abort(404)
+
+        archive = OrderedDict({})
+        for post in posts:
+            year = str(post.custom['datetime'].year)
+            month = str(time.strftime('%B', post.custom['localtime']))
+            if not year in archive:
+                archive[year] = OrderedDict({})
+            if not month in archive[year]:
+                archive[year][month] = OrderedDict({})
+                archive[year][month]['posts'] = []
+            archive[year][month]['posts'].append(post)
+
+        return render_template('archiveview.html', archive=archive)

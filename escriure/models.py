@@ -1,6 +1,7 @@
 from database import db
 from flask import g, url_for
 from markdown import markdown
+from datetime import datetime
 
 import time
 
@@ -21,15 +22,18 @@ class PostModel(db.Model):
     status = db.Column(db.Enum(['draft', 'published']))
     comment_count = db.Column(db.Integer)
     comment_status = db.Column(db.Text)
+    twitter = db.Column(db.Integer)
 
     @property
     def custom(self):
         custom = {}
-        custom['permalink'] = g.config['url'] + url_for('PostView:get', permaid=self.permaid)
-        custom['date'] = time.strftime('%e %b %Y', time.localtime(self.timestamp))
-        custom['date_full'] = time.strftime('%c', time.localtime(self.timestamp))
-        custom['date_rss'] = time.strftime('%a, %d %b %Y %H:%M:%S %z', time.localtime(self.timestamp))
-        
+        custom['permalink'] = url_for('PostView:get', permaid=self.permaid, _external=True)
+        custom['datetime'] = datetime.fromtimestamp(self.timestamp) # used for archive generation
+        custom['localtime'] = time.localtime(self.timestamp) # used for archive generation
+        custom['date_archive'] = time.strftime('%e %B', custom['localtime']) # used for archive
+        custom['date'] = time.strftime('%e %b %Y', custom['localtime']) # shown as timestamps
+        custom['date_full'] = time.strftime('%c', custom['localtime']) # shown as tooltips in timestamps
+        custom['date_rss'] = time.strftime('%a, %d %b %Y %H:%M:%S %z', custom['localtime']) # shown in rss feed
         return custom
 
     def __repr__(self):

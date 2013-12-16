@@ -1,14 +1,15 @@
+import time
+
 from flask import Flask, render_template, request, g, flash, session
 
 from escriure.config import _cfg, _cfgc
 from escriure.database import db
-
 from escriure.views import *
-
-import time
 
 app = Flask(__name__)
 app.debug = True
+app.jinja_env.trim_blocks = True
+app.jinja_env.lstrip_blocks = True
 
 app.config['SQLALCHEMY_DATABASE_URI'] = _cfg('database')
 db.app = app
@@ -20,6 +21,7 @@ RSSView.register(app)
 SitemapView.register(app)
 RestView.register(app)
 BlobView.register(app)
+ArchiveView.register(app)
 
 @app.before_request
 def before_request():
@@ -28,4 +30,4 @@ def before_request():
     g.session = {}
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)

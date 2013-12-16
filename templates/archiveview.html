@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="archive">
+        {% for year, months in archive.iteritems() %}
+            <h3>{{ year }}</h3>
+            {% for month, posts in months.iteritems() %}
+                <h4>{{ month }}</h4>
+                {% for post in posts.posts %}
+                    <p><a href="{{ url_for('PostView:get', permaid=post.permaid) }}">{{ post.title }}</a> — <strong>{{ post.custom.date_archive }}</strong></p>
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}

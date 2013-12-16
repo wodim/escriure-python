@@ -8,7 +8,7 @@ from escriure.views import *
 
 app = Flask(__name__)
 app.debug = True
-app.config['SERVER_NAME'] = _cfg('url')
+app.config['SERVER_NAME'] = _cfg('server_name')
 
 # jinja2
 app.jinja_env.trim_blocks = True

@@ -5,3 +5,4 @@ analytics = UA-14881337-1
 title = My blog
 page_size = 5
 url = http://myblog.local
+server_name = myblog.local

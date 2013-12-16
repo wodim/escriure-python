@@ -8,13 +8,18 @@ from escriure.views import *
 
 app = Flask(__name__)
 app.debug = True
+app.config['SERVER_NAME'] = _cfg('url')
+
+# jinja2
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 
+# sqlalchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = _cfg('database')
 db.app = app
 db.init_app(app)
 
+# register views
 PostView.register(app)
 PageView.register(app)
 RSSView.register(app)

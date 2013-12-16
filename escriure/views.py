@@ -60,7 +60,9 @@ class RSSView(FlaskView):
         if posts == None:
             abort(404)
             
-        return render_template('rss-postview.html', posts=posts)
+        rss = render_template('rss-postview.html', posts=posts, pubDate=posts[0].custom['date_rss'])
+        response = Response(response=rss, mimetype='application/rss+xml')
+        return response
         
 class SitemapView(FlaskView):
     route_base = '/'
@@ -71,8 +73,10 @@ class SitemapView(FlaskView):
         
         if posts == None:
             abort(404)
-            
-        return render_template('sitemap.xml', posts=posts)
+        
+        sitemap = render_template('sitemap.xml', posts=posts)
+        response = Response(response=sitemap, mimetype='text/xml')
+        return response
         
 class RestView(FlaskView):
     route_base = '/'
@@ -81,7 +85,7 @@ class RestView(FlaskView):
     @route('/favicon.ico', endpoint='FaviconView')
     def get(self):
         if request.endpoint == 'RobotsView':
-            robots = 'Sitemap: %s/sitemap.xml' % g.config['url']
+            robots = 'Sitemap: %s/sitemap.xml' % (g.config['url'],)
             response = Response(response=robots, mimetype='text/plain')
             return response
         elif request.endpoint == 'FaviconView':

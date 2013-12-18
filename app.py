@@ -8,7 +8,6 @@ from escriure.views import *
 
 app = Flask(__name__)
 app.debug = True
-app.config['SERVER_NAME'] = _cfg('server_name')
 
 # jinja2
 app.jinja_env.trim_blocks = True
@@ -32,6 +31,10 @@ ArchiveView.register(app)
 def before_request():
     g.start = time.time()
     g.config = _cfgc
+    if 'server_name' in g.config:
+        g.config['url'] = 'http://%s' % (g.config['server_name'],)
+    else:
+        g.config['url'] = 'http://%s' % (app.config['SERVER_NAME'],)
     g.session = {}
 
 if __name__ == '__main__':

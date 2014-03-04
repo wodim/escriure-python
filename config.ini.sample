@@ -1,7 +1,2 @@
 [escriure]
-secret_key = patatas
 database = sqlite:////tmp/escriure-python.sqlite
-analytics = UA-14881337-1
-title = My blog
-page_size = 5
-server_name = ; only for testing

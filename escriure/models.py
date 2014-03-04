@@ -61,3 +61,15 @@ class BlobModel(db.Model):
 
     def __repr__(self):
         return '<Blob %r, name %r, size %r, mimetype %s>' % (self.id, self.name, self.size, self.mimetype)
+
+# -- CONFIGURATION MODEL --
+
+class ConfigModel(db.Model):
+    __tablename__ = 'config'
+
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(32))
+    value = db.Column(db.String(32))
+
+    def __repr__(self):
+        return '<Config %r, key %r, value %r>' % (self.id, self.key, self.value)
